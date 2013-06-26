@@ -1,0 +1,24 @@
+<package>
+  <name>segbot_apps</name>
+  <version>0.1.0</version>
+  <description>segbot_apps</description>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/segbot_apps</url>
+  <url type="repository">https://github.com/utexas-bwi/segbot.git</url>
+  <url type="bugtracker">https://github.com/utexas-bwi/segbot/issues</url>
+
+  <author>Piyush Khandelwal</author>
+  <maintainer email="piyushk@gmail.com">Piyush Khandelwal</maintainer>
+  <maintainer email="jack.oquin@gmail.com">Jack O'Quin</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>segbot_navigation</run_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+
+</package>
