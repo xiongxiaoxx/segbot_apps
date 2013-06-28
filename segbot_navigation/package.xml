@@ -15,8 +15,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>move_base</run_depend>
-  <run_depend>navigation</run_depend> <!-- metapackage pulls in all deps -->
-  <run_depend>eband_local_planner</run_depend>
+  <!-- navigation metapackage pulls in all deps -->
+  <!-- <run_depend>navigation</run_depend> --> <!-- uncomment after navigation hydro system release -->
+  <!-- <run_depend>eband_local_planner</run_depend> --> <!-- uncomment after eband_local_planner hydro system release -->
 
 </package>
