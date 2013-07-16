@@ -2,6 +2,11 @@
 Changelog for package segbot_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.3 (2013-07-16)
+------------------
+* added missing dependencies (closes `#4 <https://github.com/utexas-bwi/segbot_apps/issues/4>`_). Cleaned up package and cmake files.
+* changed costmap visualization to occupancy grid in rviz configuration
+
 0.1.2 (2013-07-13)
 ------------------
 * removed dependency on navigation meta-package. progress towards `#3 <https://github.com/utexas-bwi/segbot_apps/issues/3>`_
