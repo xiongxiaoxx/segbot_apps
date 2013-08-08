@@ -1,14 +1,18 @@
 <launch>
 
   <arg name="use_map_topic" default="false"/>
+  <arg name="map_service" default="static_map" />
+  <arg name="map_topic" default="map" />
+
   <arg name="scan_topic" default="scan_filtered" />
-  <arg name="map_namespace" default="" />
+
   <arg name="initial_pose_x" default="0.0" />
   <arg name="initial_pose_y" default="0.0" />
   <arg name="initial_pose_a" default="0.0" />
-  <arg name="map_frame_id" default="/map" />
-  <arg name="base_frame_id" default="/base_footprint" />
-  <arg name="odom_frame_id" default="/odom" />
+
+  <arg name="map_frame_id" default="map" />
+  <arg name="base_frame_id" default="base_footprint" />
+  <arg name="odom_frame_id" default="odom" />
 
   <node pkg="amcl" type="amcl" name="amcl">
     <param name="use_map_topic" value="$(arg use_map_topic)"/>
@@ -53,7 +57,8 @@
     <param name="global_frame_id" value="$(arg map_frame_id)" />
     <param name="odom_frame_id" value="$(arg odom_frame_id)" />
 
-    <remap from="static_map" to="$(arg map_namespace)/static_map" />
+    <remap from="static_map" to="$(arg map_service)" />
+    <remap from="map" to="$(arg map_topic)" />
 
   </node>
 
