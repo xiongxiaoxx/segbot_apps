@@ -5,6 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Map2
+        - /PointCloud21
       Splitter Ratio: 0.496795
     Tree Height: 673
   - Class: rviz/Selection
@@ -151,21 +153,58 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        nav_hokuyo_laser_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        nav_hokuyo_link:
+        nav_kinect_base_plate_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        nav_hokuyo_plate_link:
+        nav_kinect_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        nav_kinect_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        nav_kinect_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        nav_hokuyo_sensor_beam_link:
+        nav_kinect_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        nav_kinect_rgb_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        nav_kinect_sensor_beam_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        nav_kinect_standoff_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        nav_kinect_standoff_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        nav_kinect_standoff_3_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        nav_kinect_standoff_4_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        nav_kinect_top_plate_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -235,7 +274,7 @@ Visualization Manager:
       Marker Topic: /move_base/EBandPlannerROS/eband_visualization
       Name: Marker
       Namespaces:
-        {}
+        bubbles: true
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -243,7 +282,7 @@ Visualization Manager:
       Marker Topic: /move_base/EBandPlannerROS/eband_visualization_array
       Name: MarkerArray
       Namespaces:
-        {}
+        bubbles: true
       Queue Size: 100
       Value: true
     - Alpha: 0.7
@@ -253,6 +292,42 @@ Visualization Manager:
       Enabled: true
       Name: Costmap
       Topic: /move_base/local_costmap/costmap
+      Value: true
+    - Alpha: 0.7
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: Map
+      Topic: /move_base/global_costmap/costmap
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.01
+      Style: Points
+      Topic: /nav_kinect/depth/points
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
@@ -273,17 +348,17 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 21.865
+      Distance: 4.14977
       Focal Point:
-        X: 0.366118
-        Y: 3.03124
-        Z: 9.7551
+        X: 1.57097
+        Y: 2.48703
+        Z: 1.67527
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 1.4498
+      Pitch: 0.584801
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.70536
+      Yaw: 4.14037
     Saved: ~
 Window Geometry:
   Displays:
