@@ -7,7 +7,7 @@
   <include file="$(arg robot_configuration)" />
 
   <node name="map_server" pkg="map_server" type="map_server" 
-    args="$(arg map_file" />
+    args="$(arg map_file)" />
   <include file="$(find segbot_navigation)/launch/amcl.launch" />
 
   <include file="$(find segbot_navigation)/launch/move_base_eband.launch" />
