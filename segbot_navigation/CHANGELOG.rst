@@ -2,6 +2,10 @@
 Changelog for package segbot_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.5 (2013-09-03)
+------------------
+* closes `#8 <https://github.com/utexas-bwi/segbot_apps/issues/8>`_
+
 0.1.4 (2013-08-12)
 ------------------
 * added a real world navigation file
