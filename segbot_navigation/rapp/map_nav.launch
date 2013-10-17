@@ -7,7 +7,8 @@
   <arg name="map_frame" default="map" />
   <arg name="map_service" default="/static_map" />
   <arg name="map_topic" default="/map" />
-  <arg name="tf_prefix" default="" />
+  <arg name="application_namespace" default="" />
+  <arg name="tf_prefix" default="$(arg application_namespace)" />
 
   <param name="tf_prefix" value="$(arg tf_prefix)" />
   <arg name="base_frame_id" default="$(arg tf_prefix)/base_footprint" />
