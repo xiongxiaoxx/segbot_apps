@@ -1,12 +1,12 @@
 publishers:
   - scan_filtered
+  - odom
   - /tf
   - tf_changes
   - /tf_changes
   - /map
   - amcl_pose
 subscribers: 
-  - cmd_vel
   - initialpose
   - move_base_simple/goal
 services:
