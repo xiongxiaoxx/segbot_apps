@@ -1,6 +1,6 @@
 display:      Map Nav
 description:  Drive a segbot around a pre-made map.
-platform:     linux.ros.segbot
+platform:     linux.precise.ros.segbot
 launch:       segbot_navigation/map_nav.launch
 interface:    segbot_navigation/map_nav.interface
 icon:         segbot_navigation/map_nav_bubble_icon.png
