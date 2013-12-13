@@ -1,7 +1,7 @@
 # http://ros.org/doc/groovy/api/catkin/html/user_guide/supposed.html
 cmake_minimum_required(VERSION 2.8.3)
 project(segbot_logical_translator)
-find_package(catkin REQUIRED COMPONENTS roscpp bwi_mapper tf nav_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp bwi_mapper bwi_planning_common tf nav_msgs)
 
 find_package(OpenCV REQUIRED)
 find_package(PkgConfig REQUIRED)
@@ -20,37 +20,37 @@ include_directories(
   ${YAML_CPP_INCLUDE_DIRS}
   )
 
-add_executable(cc_test src/cc_test.cpp)
-target_link_libraries(cc_test ${OpenCV_LIBRARIES})
-
-add_executable(gazebo_handler src/gazebo_handler.cpp)
-target_link_libraries(gazebo_handler 
-  ${catkin_LIBRARIES}
-  ${YAML_CPP_LIBRARIES}
-)
-
+## add_executable(cc_test src/cc_test.cpp)
+## target_link_libraries(cc_test ${OpenCV_LIBRARIES})
+## 
+## add_executable(gazebo_handler src/gazebo_handler.cpp)
+## target_link_libraries(gazebo_handler 
+##   ${catkin_LIBRARIES}
+##   ${YAML_CPP_LIBRARIES}
+## )
+## 
 add_executable(test_door_detector src/test_door_detector.cpp)
 target_link_libraries(test_door_detector 
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
   ${YAML_CPP_LIBRARIES})
 
-add_executable(mark_locations src/mark_locations.cpp)
-target_link_libraries(mark_locations 
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBRARIES}
-  ${YAML_CPP_LIBRARIES})
-
-add_executable(mark_doors src/mark_doors.cpp)
-target_link_libraries(mark_doors 
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBRARIES}
-  ${YAML_CPP_LIBRARIES})
+## add_executable(mark_locations src/mark_locations.cpp)
+## target_link_libraries(mark_locations 
+##   ${catkin_LIBRARIES}
+##   ${OpenCV_LIBRARIES}
+##   ${YAML_CPP_LIBRARIES})
+## 
+## add_executable(mark_doors src/mark_doors.cpp)
+## target_link_libraries(mark_doors 
+##   ${catkin_LIBRARIES}
+##   ${OpenCV_LIBRARIES}
+##   ${YAML_CPP_LIBRARIES})
 
 install(TARGETS
-  cc_test
+  #cc_test
   test_door_detector
-  mark_doors
+  #mark_doors
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY

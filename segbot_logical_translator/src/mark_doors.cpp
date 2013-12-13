@@ -42,7 +42,7 @@
 #include <bwi_mapper/topological_mapper.h>
 #include <bwi_mapper/map_utils.h>
 #include <bwi_mapper/map_inflator.h>
-#include <segbot_logical_translator/structures.h>
+#include <bwi_planning_common/structures.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -95,8 +95,8 @@ int main(int argc, char** argv) {
   cv::namedWindow("Display", CV_WINDOW_AUTOSIZE);
   cv::setMouseCallback("Display", mouseCallback, 0);
 
-  std::vector<segbot_logical_translator::Door> doors;
-  segbot_logical_translator::Door current_door;
+  std::vector<bwi_planning_common::Door> doors;
+  bwi_planning_common::Door current_door;
   std::vector<int32_t> component_map;
   std::vector<std::string> locations;
   std::string current_location;

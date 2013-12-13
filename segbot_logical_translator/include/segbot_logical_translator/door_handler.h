@@ -42,7 +42,7 @@
 
 #include <ros/ros.h>
 #include <boost/shared_ptr.hpp>
-#include <segbot_logical_translator/structures.h>
+#include <bwi_planning_common/structures.h>
 #include <bwi_mapper/map_loader.h>
 #include <bwi_mapper/map_utils.h>
 #include <bwi_mapper/point_utils.h>
@@ -56,8 +56,8 @@ namespace segbot_logical_translator {
     public:
 
       DoorHandler (std::string map_file, std::string door_file, std::string location_file) {
-        readDoorFile(door_file, doors_);
-        readLocationFile(location_file, locations_, location_map_);
+        bwi_planning_common::readDoorFile(door_file, doors_);
+        bwi_planning_common::readLocationFile(location_file, locations_, location_map_);
         mapper_.reset(new bwi_mapper::MapLoader(map_file));
         nav_msgs::OccupancyGrid grid;
         mapper_->getMap(grid);
@@ -288,7 +288,7 @@ namespace segbot_logical_translator {
 
     private:
 
-      std::vector<segbot_logical_translator::Door> doors_;
+      std::vector<bwi_planning_common::Door> doors_;
       std::vector<std::string> locations_;
       std::vector<int32_t> location_map_;
 
@@ -299,10 +299,6 @@ namespace segbot_logical_translator {
       nav_msgs::MapMetaData info_;
 
       ros::ServiceClient make_plan_client_;
-
-      // boost::shared_ptr <navfn::NavfnROS> navfn_;
-      // boost::shared_ptr <costmap_2d::Costmap2DROS> costmap_;
-      // boost::shared_ptr<segbot_logical_translator::CostmapDoorPlugin> door_plugin_;
 
   }; /* DoorHandler */
   

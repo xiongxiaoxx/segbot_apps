@@ -42,7 +42,7 @@
 #include <bwi_mapper/topological_mapper.h>
 #include <bwi_mapper/map_utils.h>
 #include <bwi_mapper/map_inflator.h>
-#include <segbot_logical_translator/structures.h>
+#include <bwi_planning_common/structures.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>

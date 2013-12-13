@@ -8,7 +8,7 @@
 #include <boost/regex.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <segbot_logical_translator/structures.h>
+#include <bwi_planning_common/structures.h>
 #include <gazebo_msgs/GetModelState.h>
 #include <gazebo_msgs/SetModelState.h>
 #include <gazebo_msgs/SpawnModel.h>

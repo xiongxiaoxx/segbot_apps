@@ -9,7 +9,7 @@
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <segbot_logical_translator/structures.h>
+#include <bwi_planning_common/structures.h>
 
 namespace segbot_logical_translator {
 
