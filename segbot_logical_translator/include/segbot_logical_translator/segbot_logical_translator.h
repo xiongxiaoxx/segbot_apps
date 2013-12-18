@@ -44,6 +44,7 @@
 
 #include <bwi_mapper/map_loader.h>
 #include <bwi_planning_common/structures.h>
+#include <bwi_tools/point.h>
 #include <nav_msgs/GetPlan.h>
 
 namespace segbot_logical_translator {
@@ -57,22 +58,22 @@ namespace segbot_logical_translator {
       bool isDoorOpen(size_t idx);
 
       bool getApproachPoint(size_t idx, 
-          const bwi_planning_common::Point2f& current_location,
-          bwi_planning_common::Point2f& point, float &yaw);
+          const bwi::Point2f& current_location,
+          bwi::Point2f& point, float &yaw);
 
       bool getThroughDoorPoint(size_t idx, 
-          const bwi_planning_common::Point2f& current_location,
-          bwi_planning_common::Point2f& point, float& yaw);
+          const bwi::Point2f& current_location,
+          bwi::Point2f& point, float& yaw);
 
       bool isRobotFacingDoor(
-          const bwi_planning_common::Point2f& current_location,
+          const bwi::Point2f& current_location,
           float yaw, float threshold, size_t idx);
       bool isRobotBesideDoor(
-          const bwi_planning_common::Point2f& current_location,
+          const bwi::Point2f& current_location,
           float yaw, float threshold, size_t idx);
 
       size_t getLocationIdx(
-          const bwi_planning_common::Point2f& current_location);
+          const bwi::Point2f& current_location);
 
       inline size_t getLocationIdx(
           const std::string& loc_str) const {

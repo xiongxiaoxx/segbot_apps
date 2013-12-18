@@ -119,7 +119,7 @@ void SegbotLogicalNavigator::senseState(
     std::vector<PlannerAtom>& observations, size_t door_idx) {
 
   size_t num_doors = getNumDoors();
-  bwi_planning_common::Point2f robot_loc(robot_x_, robot_y_);
+  bwi::Point2f robot_loc(robot_x_, robot_y_);
   bool first_facing = false;
   bool first_beside = false;
   size_t facing_idx = NO_DOOR_IDX;
@@ -206,16 +206,16 @@ bool SegbotLogicalNavigator::approachDoor(const std::string& door_name,
     return false;
   } else {
 
-    bwi_planning_common::Point2f approach_pt;
+    bwi::Point2f approach_pt;
     float approach_yaw = 0;
     bool door_approachable = false;
 
     if (!gothrough) {
       door_approachable = getApproachPoint(door_idx, 
-          bwi_planning_common::Point2f(robot_x_, robot_y_), approach_pt, approach_yaw);
+          bwi::Point2f(robot_x_, robot_y_), approach_pt, approach_yaw);
     } else {
       door_approachable = getThroughDoorPoint(door_idx,
-          bwi_planning_common::Point2f(robot_x_, robot_y_), approach_pt, approach_yaw);
+          bwi::Point2f(robot_x_, robot_y_), approach_pt, approach_yaw);
     }
     
     if (door_approachable) {
