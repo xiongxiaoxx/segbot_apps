@@ -1,9 +1,13 @@
-import os
+import random
 import rospy
+import string
+import time
 
+from functools import partial
+from segbot_gui.srv import QuestionDialog, QuestionDialogRequest, QuestionDialogResponse
 from qt_gui.plugin import Plugin
-from python_qt_binding import loadUi
-from python_qt_binding.QtGui import QWidget
+from python_qt_binding.QtGui import QWidget, QPushButton, QVBoxLayout, QTextBrowser, QHBoxLayout
+from python_qt_binding.QtCore import SIGNAL
 
 class QuestionDialogPlugin(Plugin):
 
@@ -12,40 +16,75 @@ class QuestionDialogPlugin(Plugin):
         # Give QObjects reasonable names
         self.setObjectName('QuestionDialogPlugin')
 
-        # Process standalone plugin command-line arguments
-        from argparse import ArgumentParser
-        parser = ArgumentParser()
-        # Add argument(s) to the parser.
-        parser.add_argument("-q", "--quiet", action="store_true",
-                      dest="quiet",
-                      help="Put plugin in silent mode")
-        args, unknowns = parser.parse_known_args(context.argv())
-        if not args.quiet:
-            print 'arguments: ', args
-            print 'unknowns: ', unknowns
-
         # Create QWidget
         self._widget = QWidget()
-        # Get path to UI file which is a sibling of this file
-        # in this example the .ui and .py file are in the same folder
-        ui_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'QuestionDialogPlugin.ui')
-        # Extend the widget with all attributes and children from UI file
-        loadUi(ui_file, self._widget)
-        # Give QObjects reasonable names
-        self._widget.setObjectName('MyPluginUi')
-        # Show _widget.windowTitle on left-top of each plugin (when 
-        # it's set in _widget). This is useful when you open multiple 
-        # plugins at once. Also if you open multiple instances of your 
-        # plugin at once, these lines add number to make it easy to 
-        # tell from pane to pane.
+        self._layout = QVBoxLayout(self._widget)
+        self._text_browser = QTextBrowser(self._widget)
+        self._layout.addWidget(self._text_browser)
+        self._button_layout = QHBoxLayout()
+        self._layout.addLayout(self._button_layout)
+
+        # layout = QVBoxLayout(self._widget)
+        # layout.addWidget(self.button)
+        self._widget.setObjectName('QuestionDialogPluginUI')
         if context.serial_number() > 1:
             self._widget.setWindowTitle(self._widget.windowTitle() + (' (%d)' % context.serial_number()))
-        # Add widget to the user interface
         context.add_widget(self._widget)
 
+        # Setup service provider
+        self.service = rospy.Service('question_dialog', QuestionDialog,
+                                     self.service_callback)
+        self.response_ready = False
+        self.response = None
+        self.buttons = []
+
+        self.connect(self._widget, SIGNAL("update"), self.update)
+        self.connect(self._widget, SIGNAL("timeout"), self.timeout)
+
     def shutdown_plugin(self):
-        # TODO unregister all publishers here
-        pass
+        self.service.shutdown()
+
+    def service_callback(self, req):
+        self.response_ready = False
+        self.request = req
+        self._widget.emit(SIGNAL("update"))
+        start_time = time.time() # Since this will always run in the real world, use wall time here
+        while not self.response_ready:
+            if req.timeout != QuestionDialogRequest.NO_TIMEOUT:
+                current_time = time.time()
+                if current_time - start_time > req.timeout:
+                    self._widget.emit(SIGNAL("timeout"))
+                    return QuestionDialogResponse(QuestionDialogRequest.TIMED_OUT)
+            time.sleep(0.2)
+        return self.response
+
+    def update(self):
+        self.clean()
+        req = self.request
+        self._text_browser.setText(req.message)
+        for index, options in enumerate(req.options): 
+            button = QPushButton(options, self._widget)
+            button.clicked.connect(partial(self.handleButton, index))
+            self._button_layout.addWidget(button)
+            self.buttons.append(button)
+        if len(req.options) == 0: # Only display, no question
+            self.response = QuestionDialogResponse(QuestionDialogRequest.NO_RESPONSE)
+            self.response_ready = True
+
+    def timeout(self):
+        self._text_browser.setText("Oh No! The request timed out.")
+        self.clean()
+
+    def clean(self):
+        while self._button_layout.count():
+            item = self._button_layout.takeAt(0)
+            item.widget().setParent(None)
+            item.widget().deleteLater()
+
+    def handleButton(self, index):
+        self.response_ready = True
+        self.response = QuestionDialogResponse(index)
+        self.clean()
 
     def save_settings(self, plugin_settings, instance_settings):
         # TODO save intrinsic configuration, usually using:

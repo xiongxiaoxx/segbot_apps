@@ -1,0 +1,9 @@
+float32 NO_TIMEOUT=0.0
+int32 NO_RESPONSE=-1
+int32 TIMED_OUT=-2
+
+string message
+string[] options
+float32 timeout
+---
+int32 index
