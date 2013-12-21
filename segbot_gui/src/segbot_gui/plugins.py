@@ -1,12 +1,10 @@
-import random
 import rospy
-import string
 import time
 
 from functools import partial
 from segbot_gui.srv import QuestionDialog, QuestionDialogRequest, QuestionDialogResponse
 from qt_gui.plugin import Plugin
-from python_qt_binding.QtGui import QWidget, QPushButton, QVBoxLayout, QTextBrowser, QHBoxLayout
+from python_qt_binding.QtGui import QWidget, QPushButton, QVBoxLayout, QTextBrowser, QHBoxLayout, QLabel, QLineEdit
 from python_qt_binding.QtCore import SIGNAL
 
 class QuestionDialogPlugin(Plugin):
@@ -38,6 +36,8 @@ class QuestionDialogPlugin(Plugin):
         self.response_ready = False
         self.response = None
         self.buttons = []
+        self.text_label = None
+        self.text_input = None
 
         self.connect(self._widget, SIGNAL("update"), self.update)
         self.connect(self._widget, SIGNAL("timeout"), self.timeout)
@@ -57,7 +57,7 @@ class QuestionDialogPlugin(Plugin):
                 if current_time - start_time > req.timeout:
                     self._widget.emit(SIGNAL("timeout"))
                     return QuestionDialogResponse(
-                            QuestionDialogRequest.TIMED_OUT)
+                            QuestionDialogRequest.TIMED_OUT, "")
             time.sleep(0.2)
         return self.response
 
@@ -65,30 +65,47 @@ class QuestionDialogPlugin(Plugin):
         self.clean()
         req = self.request
         self._text_browser.setText(req.message)
-        for index, options in enumerate(req.options): 
-            button = QPushButton(options, self._widget)
-            button.clicked.connect(partial(self.handleButton, index))
-            self._button_layout.addWidget(button)
-            self.buttons.append(button)
-        if len(req.options) == 0: # Only display, no question
+        if req.type == QuestionDialogRequest.DISPLAY:
+            # All done, nothing more too see here.
             self.response = QuestionDialogResponse(
-                    QuestionDialogRequest.NO_RESPONSE)
+                    QuestionDialogRequest.NO_RESPONSE, "")
             self.response_ready = True
+        elif req.type == QuestionDialogRequest.CHOICE_QUESTION:
+            for index, options in enumerate(req.options): 
+                button = QPushButton(options, self._widget)
+                button.clicked.connect(partial(self.handle_button, index))
+                self._button_layout.addWidget(button)
+                self.buttons.append(button)
+        elif req.type == QuestionDialogRequest.TEXT_QUESTION:
+            self.text_label = QLabel("Enter here: ", self._widget)
+            self._button_layout.addWidget(self.text_label)
+            self.text_input = QLineEdit(self._widget)
+            self.text_input.editingFinished.connect(self.handle_text)
+            self._button_layout.addWidget(self.text_input)
 
     def timeout(self):
-        self._text_browser.setText("Oh No! The request timed out.")
+        self._text_browser.setText("Oh no! The request timed out.")
         self.clean()
 
     def clean(self):
         while self._button_layout.count():
             item = self._button_layout.takeAt(0)
-            item.widget().setParent(None)
             item.widget().deleteLater()
+        self.buttons = []
+        self.text_input = None
+        self.text_label = None
 
-    def handleButton(self, index):
-        self.response_ready = True
-        self.response = QuestionDialogResponse(index)
+    def handle_button(self, index):
+        self.response = QuestionDialogResponse(index, "")
         self.clean()
+        self.response_ready = True
+
+    def handle_text(self):
+        self.response = QuestionDialogResponse(
+            QuestionDialogRequest.TEXT_RESPONSE,
+            self.text_input.text())
+        self.clean()
+        self.response_ready = True
 
     def save_settings(self, plugin_settings, instance_settings):
         # TODO save intrinsic configuration, usually using:
