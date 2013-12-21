@@ -28,7 +28,8 @@ class QuestionDialogPlugin(Plugin):
         # layout.addWidget(self.button)
         self._widget.setObjectName('QuestionDialogPluginUI')
         if context.serial_number() > 1:
-            self._widget.setWindowTitle(self._widget.windowTitle() + (' (%d)' % context.serial_number()))
+            self._widget.setWindowTitle(self._widget.windowTitle() + 
+                                        (' (%d)' % context.serial_number()))
         context.add_widget(self._widget)
 
         # Setup service provider
@@ -48,13 +49,15 @@ class QuestionDialogPlugin(Plugin):
         self.response_ready = False
         self.request = req
         self._widget.emit(SIGNAL("update"))
-        start_time = time.time() # Since this will always run in the real world, use wall time here
+        # Start timer against wall clock here instead of the ros clock.
+        start_time = time.time()
         while not self.response_ready:
             if req.timeout != QuestionDialogRequest.NO_TIMEOUT:
                 current_time = time.time()
                 if current_time - start_time > req.timeout:
                     self._widget.emit(SIGNAL("timeout"))
-                    return QuestionDialogResponse(QuestionDialogRequest.TIMED_OUT)
+                    return QuestionDialogResponse(
+                            QuestionDialogRequest.TIMED_OUT)
             time.sleep(0.2)
         return self.response
 
@@ -68,7 +71,8 @@ class QuestionDialogPlugin(Plugin):
             self._button_layout.addWidget(button)
             self.buttons.append(button)
         if len(req.options) == 0: # Only display, no question
-            self.response = QuestionDialogResponse(QuestionDialogRequest.NO_RESPONSE)
+            self.response = QuestionDialogResponse(
+                    QuestionDialogRequest.NO_RESPONSE)
             self.response_ready = True
 
     def timeout(self):
