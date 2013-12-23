@@ -2,9 +2,12 @@ import rospy
 import time
 
 from functools import partial
-from segbot_gui.srv import QuestionDialog, QuestionDialogRequest, QuestionDialogResponse
+from segbot_gui.srv import QuestionDialog, QuestionDialogResponse, \
+                           QuestionDialogRequest
 from qt_gui.plugin import Plugin
-from python_qt_binding.QtGui import QWidget, QPushButton, QVBoxLayout, QTextBrowser, QHBoxLayout, QLabel, QLineEdit
+from python_qt_binding.QtGui import QHBoxLayout, QLabel, QLineEdit, \
+                                    QPushButton, QTextBrowser, QVBoxLayout, \
+                                    QWidget
 from python_qt_binding.QtCore import SIGNAL
 
 class QuestionDialogPlugin(Plugin):
