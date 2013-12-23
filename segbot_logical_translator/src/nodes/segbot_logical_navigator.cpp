@@ -68,6 +68,9 @@ class SegbotLogicalNavigator :
     bool approachDoor(const std::string& door_name, 
         std::vector<PlannerAtom>& observations,
         std::string& error_message, bool gothrough = false);
+    bool senseDoor(const std::string& door_name, 
+        std::vector<PlannerAtom>& observations,
+        std::string& error_message);
     bool executeNavigationGoal( const geometry_msgs::PoseStamped& pose);
     void odometryHandler( const nav_msgs::Odometry::ConstPtr& odom);
 
@@ -77,7 +80,6 @@ class SegbotLogicalNavigator :
 
     double door_proximity_distance_;
 
-    boost::shared_ptr<ros::NodeHandle> nh_;
     ros::ServiceServer service_;
     boost::shared_ptr<
       actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> > 
@@ -93,7 +95,7 @@ class SegbotLogicalNavigator :
 SegbotLogicalNavigator::SegbotLogicalNavigator() 
   : robot_x_(0), robot_y_(0), robot_yaw_(0) {
 
-  nh_.reset(new ros::NodeHandle());
+  ROS_INFO("SegbotLogicalNavigator: Advertising services!");
 
   ros::param::param("~door_proximity_distance", door_proximity_distance_, 1.5);
 
@@ -117,6 +119,12 @@ SegbotLogicalNavigator::SegbotLogicalNavigator()
 
 void SegbotLogicalNavigator::senseState(
     std::vector<PlannerAtom>& observations, size_t door_idx) {
+
+  PlannerAtom at;
+  at.name = "at";
+  size_t location_idx = getLocationIdx(bwi::Point2f(robot_x_, robot_y_));
+  at.value.push_back(getLocationString(location_idx));
+  observations.push_back(at);
 
   size_t num_doors = getNumDoors();
   bwi::Point2f robot_loc(robot_x_, robot_y_);
@@ -241,6 +249,27 @@ bool SegbotLogicalNavigator::approachDoor(const std::string& door_name,
   }
 }
 
+bool SegbotLogicalNavigator::senseDoor(const std::string& door_name, 
+    std::vector<PlannerAtom>& observations,
+    std::string& error_message) {
+  error_message = "";
+  size_t door_idx = 
+    bwi_planning_common::resolveDoor(door_name, doors_);
+  if (door_idx == bwi_planning_common::NO_DOOR_IDX) {
+    error_message = "Door " + door_name + " does not exist!";
+    return false;
+  } 
+  bool door_open = isDoorOpen(door_idx);
+  PlannerAtom open;
+  open.name = "open";
+  if (!door_open) {
+    open.name = "-" + open.name;
+  }
+  open.value.push_back(door_name);
+  observations.push_back(open);
+  return true;
+}
+
 bool SegbotLogicalNavigator::execute(
     bwi_planning_common::PlannerInterface::Request &req,
     bwi_planning_common::PlannerInterface::Response &res) {
@@ -250,9 +279,12 @@ bool SegbotLogicalNavigator::execute(
   if (req.command.name == "approach") {
     res.success = approachDoor(req.command.value[0], res.observations,
         res.status, false);
-  } else if (req.command.name == "gothrough" ) {
+  } else if (req.command.name == "gothrough") {
     res.success = approachDoor(req.command.value[0], res.observations,
         res.status, true);
+  } else if (req.command.name == "sensedoor") {
+    res.success = senseDoor(req.command.value[0], res.observations,
+        res.status);
   } else {
     res.success = true;
     res.status = "";
@@ -267,14 +299,11 @@ int main(int argc, char *argv[]) {
   ros::init(argc, argv, "segbot_logical_translator");
   ros::NodeHandle nh;
 
-  SegbotLogicalNavigator handler();
-
-  ros::Rate rate(10);
-
-  while (ros::ok()) {
-    ros::spinOnce();
-    rate.sleep();
-  }
+  ROS_INFO("SegbotLogicalNavigator: Starting up node...");
+  SegbotLogicalNavigator handler;
+  ros::MultiThreadedSpinner spinner(2);
+  spinner.spin();
+  ROS_INFO("SegbotLogicalNavigator: Stopping node.");
 
   return 0;
 }

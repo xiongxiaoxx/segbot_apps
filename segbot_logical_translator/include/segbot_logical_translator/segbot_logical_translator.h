@@ -121,6 +121,7 @@ namespace segbot_logical_translator {
       boost::shared_ptr <bwi_mapper::MapLoader> mapper_;
       nav_msgs::MapMetaData info_;
 
+      boost::shared_ptr<ros::NodeHandle> nh_;
       ros::ServiceClient make_plan_client_;
 
   }; /* SegbotLogicalTranslator */

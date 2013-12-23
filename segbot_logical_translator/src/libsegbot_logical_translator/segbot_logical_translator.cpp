@@ -36,6 +36,7 @@
 
 #include <tf/transform_datatypes.h>
 
+#include <boost/algorithm/string/join.hpp>
 #include <bwi_mapper/map_utils.h>
 #include <bwi_mapper/point_utils.h>
 
@@ -45,10 +46,26 @@ namespace segbot_logical_translator {
 
   SegbotLogicalTranslator::SegbotLogicalTranslator() {
 
+    ROS_INFO_STREAM("SegbotLogicalTranslator: Initializing...");
+    nh_.reset(new ros::NodeHandle);
+    
     std::string map_file, door_file, location_file;
-    ros::param::get("~map_file", map_file);
-    ros::param::get("~door_file", door_file);
-    ros::param::get("~locations_file", location_file);
+    std::vector<std::string> required_parameters;
+    if (!ros::param::get("~map_file", map_file)) {
+      required_parameters.push_back("~map_file");
+    }
+    if (!ros::param::get("~door_file", door_file)) {
+      required_parameters.push_back("~door_file");
+    }
+    if (!ros::param::get("~location_file", location_file)) {
+      required_parameters.push_back("~location_file");
+    }
+    if (required_parameters.size() != 0) {
+      std::string message = "SegbotLogicalTranslator: Required parameters [" + 
+        boost::algorithm::join(required_parameters, ", ") + "] missing!";
+      ROS_FATAL_STREAM(message);
+      throw std::runtime_error(message);
+    }
 
     bwi_planning_common::readDoorFile(door_file, doors_);
     bwi_planning_common::readLocationFile(location_file, 
@@ -58,11 +75,11 @@ namespace segbot_logical_translator {
     mapper_->getMap(grid);
     info_ = grid.info;
 
-    ros::NodeHandle n;
+    ROS_INFO_STREAM("SegbotLogicalTranslator: Waiting for make_plan service..");
     make_plan_client_ = 
-      n.serviceClient<nav_msgs::GetPlan>("move_base/make_plan"); 
+      nh_->serviceClient<nav_msgs::GetPlan>("move_base/make_plan"); 
     make_plan_client_.waitForExistence();
-    std::cout << "Make plan server AVAILABLE" << std::endl; 
+    ROS_INFO_STREAM("SegbotLogicalTranslator: make_plan service found!");
 
     ros::param::param<std::string>(
         "~global_frame_id", global_frame_id_, "/map");
