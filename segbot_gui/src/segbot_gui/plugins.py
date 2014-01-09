@@ -5,7 +5,7 @@ from functools import partial
 from segbot_gui.srv import QuestionDialog, QuestionDialogResponse, \
                            QuestionDialogRequest
 from qt_gui.plugin import Plugin
-from python_qt_binding.QtGui import QHBoxLayout, QLabel, QLineEdit, \
+from python_qt_binding.QtGui import QFont, QHBoxLayout, QLabel, QLineEdit, \
                                     QPushButton, QTextBrowser, QVBoxLayout, \
                                     QWidget
 from python_qt_binding.QtCore import SIGNAL
@@ -19,6 +19,7 @@ class QuestionDialogPlugin(Plugin):
 
         # Create QWidget
         self._widget = QWidget()
+        self._widget.setFont(QFont("Times", 14, QFont.Bold))
         self._layout = QVBoxLayout(self._widget)
         self._text_browser = QTextBrowser(self._widget)
         self._layout.addWidget(self._text_browser)
