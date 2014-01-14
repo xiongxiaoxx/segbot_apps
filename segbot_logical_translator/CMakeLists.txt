@@ -18,6 +18,7 @@ catkin_package(
   CATKIN_DEPENDS 
     bwi_mapper 
     bwi_planning_common
+    move_base_msgs
     nav_msgs
     roscpp 
     tf

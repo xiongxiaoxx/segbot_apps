@@ -1,7 +1,11 @@
 <package>
   <name>segbot_navigation</name>
   <version>0.1.5</version>
-  <description>segbot_navigation</description>
+  <description>
+    Contains launch files for running the ROS navigation stack on the segbot
+    using the eband_local_planner approach, as well as launch files for amcl
+    and gmapping.
+  </description>
 
   <license>BSD</license>
 
@@ -9,7 +13,7 @@
   <url type="repository">https://github.com/utexas-bwi/segbot_apps.git</url>
   <url type="bugtracker">https://github.com/utexas-bwi/segbot_apps/issues</url>
 
-  <author>Piyush Khandelwal</author>
+  <author email="piyushk@gmail.com">Piyush Khandelwal</author>
   <maintainer email="piyushk@gmail.com">Piyush Khandelwal</maintainer>
   <maintainer email="jack.oquin@gmail.com">Jack O'Quin</maintainer>
 
