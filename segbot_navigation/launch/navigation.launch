@@ -2,7 +2,7 @@
 
   <arg name="map_file" />
   <arg name="robot_configuration" 
-    default="$(find segbot_bringup)/launch/segbot_hokuyo.launch"/>
+    default="$(find segbot_bringup)/launch/segbot_navigation.launch"/>
 
   <include file="$(arg robot_configuration)" />
 
