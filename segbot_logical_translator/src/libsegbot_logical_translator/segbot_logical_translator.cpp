@@ -36,7 +36,10 @@
 
 #include <tf/transform_datatypes.h>
 
+#include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/foreach.hpp>
 #include <bwi_mapper/map_utils.h>
 #include <bwi_mapper/point_utils.h>
 
@@ -153,11 +156,16 @@ namespace segbot_logical_translator {
     }
 
     for (size_t pt = 0; pt < 2; ++pt) {
-      if (getLocationIdx(doors_[idx].approach_names[pt]) == 
-          getLocationIdx(current_location)) {
-        point = doors_[idx].approach_points[pt];
-        yaw = doors_[idx].approach_yaw[pt];
-        return true;
+      std::vector<std::string> approach_locations;
+      boost::split(approach_locations, doors_[idx].approach_names[pt], 
+          boost::is_any_of(","), boost::token_compress_on);
+      BOOST_FOREACH(const std::string& location, approach_locations) {
+        if (getLocationIdx(doors_[idx].approach_names[pt]) == 
+            getLocationIdx(current_location)) {
+          point = doors_[idx].approach_points[pt];
+          yaw = doors_[idx].approach_yaw[pt];
+          return true;
+        }
       }
     }
 
@@ -174,13 +182,18 @@ namespace segbot_logical_translator {
     }
 
     for (size_t pt = 0; pt < 2; ++pt) {
-      if (getLocationIdx(doors_[idx].approach_names[pt]) == 
-          getLocationIdx(current_location)) {
-        point = doors_[idx].approach_points[1 - pt];
-        yaw = M_PI + doors_[idx].approach_yaw[1 - pt];
-        while (yaw > M_PI) yaw -= 2 * M_PI;
-        while (yaw <= M_PI) yaw += 2 * M_PI;
-        return true;
+      std::vector<std::string> approach_locations;
+      boost::split(approach_locations, doors_[idx].approach_names[pt], 
+          boost::is_any_of(","), boost::token_compress_on);
+      BOOST_FOREACH(const std::string& location, approach_locations) {
+        if (getLocationIdx(doors_[idx].approach_names[pt]) == 
+            getLocationIdx(current_location)) {
+          point = doors_[idx].approach_points[1 - pt];
+          yaw = M_PI + doors_[idx].approach_yaw[1 - pt];
+          while (yaw > M_PI) yaw -= 2 * M_PI;
+          while (yaw <= M_PI) yaw += 2 * M_PI;
+          return true;
+        }
       }
     }
 

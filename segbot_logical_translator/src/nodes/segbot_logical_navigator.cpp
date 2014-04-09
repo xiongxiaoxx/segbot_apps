@@ -71,6 +71,11 @@ class SegbotLogicalNavigator :
     bool senseDoor(const std::string& door_name, 
         std::vector<PlannerAtom>& observations,
         std::string& error_message);
+    
+    bool approachObject(const std::string& object_name,
+        std::vector<PlannerAtom>& observations,
+        std::string& error_message);
+
     bool executeNavigationGoal( const geometry_msgs::PoseStamped& pose);
     void odometryHandler( const nav_msgs::Odometry::ConstPtr& odom);
 
@@ -234,7 +239,6 @@ bool SegbotLogicalNavigator::approachDoor(const std::string& door_name,
       pose.pose.position.y = approach_pt.y;
       tf::quaternionTFToMsg(
           tf::createQuaternionFromYaw(approach_yaw), pose.pose.orientation); 
-      float start_time = ros::Time::now().toSec();
       bool success = executeNavigationGoal(pose);
 
       // Publish the observable fluents
@@ -247,6 +251,35 @@ bool SegbotLogicalNavigator::approachDoor(const std::string& door_name,
       return false;
     }
   }
+}
+
+bool SegbotLogicalNavigator::approachObject(const std::string& object_name, 
+    std::vector<PlannerAtom>& observations,
+    std::string& error_message) {
+
+  error_message = "";
+  observations.clear();
+
+  if (object_approach_map_.find(object_name) != object_approach_map_.end()) {
+    geometry_msgs::PoseStamped pose;
+    pose.header.stamp = ros::Time::now();
+    pose.header.frame_id = global_frame_id_;
+    pose.pose = object_approach_map_[object_name];
+    bool success = executeNavigationGoal(pose);
+
+    // Publish the observable fluents
+    senseState(observations, NO_DOOR_IDX);
+    PlannerAtom closeto;
+    closeto.name = "closeto";
+    closeto.value.push_back(object_name);
+    if (!success) {
+      closeto.name = "-closeto";
+    }
+    observations.push_back(closeto);
+  }
+
+  error_message = object_name + " does not exist.";
+  return false;
 }
 
 bool SegbotLogicalNavigator::senseDoor(const std::string& door_name, 
@@ -284,6 +317,9 @@ bool SegbotLogicalNavigator::execute(
         res.status, true);
   } else if (req.command.name == "sensedoor") {
     res.success = senseDoor(req.command.value[0], res.observations,
+        res.status);
+  } else if (req.command.name == "goto") {
+    res.success = approachObject(req.command.value[0], res.observations,
         res.status);
   } else {
     res.success = true;
