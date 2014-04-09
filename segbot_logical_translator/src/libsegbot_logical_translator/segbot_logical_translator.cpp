@@ -70,6 +70,12 @@ namespace segbot_logical_translator {
       throw std::runtime_error(message);
     }
 
+    std::string object_file;
+    if (ros::param::get("~object_file", object_file)) {
+      ROS_INFO_STREAM("Reading in object file from: " << object_file);
+      bwi_planning_common::readObjectApproachFile( object_file,
+          object_approach_map_);
+    }
     bwi_planning_common::readDoorFile(door_file, doors_);
     bwi_planning_common::readLocationFile(location_file, 
         locations_, location_map_);
@@ -160,7 +166,7 @@ namespace segbot_logical_translator {
       boost::split(approach_locations, doors_[idx].approach_names[pt], 
           boost::is_any_of(","), boost::token_compress_on);
       BOOST_FOREACH(const std::string& location, approach_locations) {
-        if (getLocationIdx(doors_[idx].approach_names[pt]) == 
+        if (getLocationIdx(location) == 
             getLocationIdx(current_location)) {
           point = doors_[idx].approach_points[pt];
           yaw = doors_[idx].approach_yaw[pt];
@@ -186,7 +192,7 @@ namespace segbot_logical_translator {
       boost::split(approach_locations, doors_[idx].approach_names[pt], 
           boost::is_any_of(","), boost::token_compress_on);
       BOOST_FOREACH(const std::string& location, approach_locations) {
-        if (getLocationIdx(doors_[idx].approach_names[pt]) == 
+        if (getLocationIdx(location) == 
             getLocationIdx(current_location)) {
           point = doors_[idx].approach_points[1 - pt];
           yaw = M_PI + doors_[idx].approach_yaw[1 - pt];
