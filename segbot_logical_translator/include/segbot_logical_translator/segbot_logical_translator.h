@@ -72,6 +72,16 @@ namespace segbot_logical_translator {
           const bwi::Point2f& current_location,
           float yaw, float threshold, size_t idx);
 
+      inline bool getObjectApproachLocation(const std::string& object_name,
+          geometry_msgs::Pose& pose) {
+        if (object_approach_map_.find(object_name) ==
+            object_approach_map_.end()) {
+          return false; 
+        }
+        pose = object_approach_map_[object_name];
+        return true;
+      }
+
       size_t getLocationIdx(
           const bwi::Point2f& current_location);
 
@@ -117,6 +127,7 @@ namespace segbot_logical_translator {
       std::vector<bwi_planning_common::Door> doors_;
       std::vector<std::string> locations_;
       std::vector<int32_t> location_map_;
+      std::map<std::string, geometry_msgs::Pose> object_approach_map_;
 
       boost::shared_ptr <bwi_mapper::MapLoader> mapper_;
       nav_msgs::MapMetaData info_;
