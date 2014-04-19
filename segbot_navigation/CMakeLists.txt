@@ -8,7 +8,7 @@ catkin_package()
 foreach(dir config launch rviz)
   install(DIRECTORY ${dir}/ 
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
-endforeach(dir)
+endforeach()
 
 
 # unit tests are enabled selectively
@@ -18,5 +18,6 @@ if (CATKIN_ENABLE_TESTING)
   roslaunch_add_file_check(launch/gmapping.launch)
   roslaunch_add_file_check(launch/move_base_eband.launch)
   roslaunch_add_file_check(launch/rviz.launch)
-  ## launch/navigation.launch not tested because it has a required arg
-endif (CATKIN_ENABLE_TESTING)
+  ## launch/navigation.launch not tested until
+  ## ros-drivers/openni_launch#10 is fixed.
+endif ()
