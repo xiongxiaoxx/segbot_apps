@@ -2,8 +2,8 @@
 Changelog for package segbot_logical_translator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2014-04-19)
+------------------
 * now actually read in object approach file
 * added the ability to approach an object, as well as added the
   ability to approach a door from any accessible location
