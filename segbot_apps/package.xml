@@ -19,6 +19,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <run_depend>segbot_gui</run_depend>
+  <run_depend>segbot_logical_translator</run_depend>
   <run_depend>segbot_navigation</run_depend>
 
   <export>
