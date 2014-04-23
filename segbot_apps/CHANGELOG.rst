@@ -2,8 +2,8 @@
 Changelog for package segbot_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2014-04-22)
+------------------
 * Add segbot_gui and segbot_logical_translator dependencies (`#16
   <https://github.com/utexas-bwi/segbot_apps/issues/16>`_)
 
