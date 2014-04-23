@@ -2,6 +2,9 @@
 Changelog for package segbot_gui
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.2.0 (2014-04-19)
 ------------------
 * now catkin_lint approved. found a bug where a plugin file was not

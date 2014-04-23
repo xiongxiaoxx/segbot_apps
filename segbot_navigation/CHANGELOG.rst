@@ -2,6 +2,9 @@
 Changelog for package segbot_navigation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.2.0 (2014-04-19)
 ------------------
 * use ``roslaunch_add_files_check()`` to test that required launch
