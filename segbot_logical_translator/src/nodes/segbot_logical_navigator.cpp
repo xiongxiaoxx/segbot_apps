@@ -60,6 +60,9 @@ class SegbotLogicalNavigator :
     SegbotLogicalNavigator();
     bool execute(bwi_planning_common::PlannerInterface::Request &req,
         bwi_planning_common::PlannerInterface::Response &res);
+    bool initialize_srv(
+           map_mux::ChangeMap::Request &req,
+           map_mux::ChangeMap::Request &res); 
 
   protected:
 
@@ -86,6 +89,7 @@ class SegbotLogicalNavigator :
     double door_proximity_distance_;
 
     ros::ServiceServer service_;
+    ros::ServiceServer service_floor_switch_;
     boost::shared_ptr<
       actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> > 
       robot_controller_;
@@ -102,10 +106,12 @@ SegbotLogicalNavigator::SegbotLogicalNavigator()
 
   ROS_INFO("SegbotLogicalNavigator: Advertising services!");
 
-  ros::param::param("~door_proximity_distance", door_proximity_distance_, 1.5);
+  ros::param::param("~door_proximity_distance", door_proximity_distance_, 2.0);
 
   service_ = nh_->advertiseService("execute_logical_goal",
       &SegbotLogicalNavigator::execute, this);
+  service_floor_switch_ = nh_->advertiseService("floor_switch",
+      &SegbotLogicalNavigator::initialize_srv, this);
 
   robot_controller_.reset(
       new actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>(
@@ -120,7 +126,16 @@ SegbotLogicalNavigator::SegbotLogicalNavigator()
   tf_filter_->registerCallback(
       boost::bind(&SegbotLogicalNavigator::odometryHandler, this, _1));
 
+
+
 }
+
+  bool SegbotLogicalNavigator::initialize_srv(
+        map_mux::ChangeMap::Request &req,
+        map_mux::ChangeMap::Request &res) {
+      SegbotLogicalTranslator::initialize();
+      return true;
+  }
 
 void SegbotLogicalNavigator::senseState(
     std::vector<PlannerAtom>& observations, size_t door_idx) {
@@ -204,6 +219,8 @@ void SegbotLogicalNavigator::odometryHandler(
   tf_->transformPose(global_frame_id_, pose_in, pose_out);
   robot_x_ = pose_out.pose.position.x;
   robot_y_ = pose_out.pose.position.y;
+  //ROS_INFO("OdometryHandler X:%f Y:%f" , robot_x_, robot_y_);
+  
   robot_yaw_ = tf::getYaw(pose_out.pose.orientation);
 }
 

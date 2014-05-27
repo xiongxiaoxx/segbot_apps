@@ -46,6 +46,7 @@
 #include <bwi_planning_common/structures.h>
 #include <bwi_tools/point.h>
 #include <nav_msgs/GetPlan.h>
+#include <map_mux/ChangeMap.h>
 
 namespace segbot_logical_translator {
 
@@ -56,6 +57,9 @@ namespace segbot_logical_translator {
       SegbotLogicalTranslator();
 
       bool isDoorOpen(size_t idx);
+      bool initialize_srv(
+           map_mux::ChangeMap::Request &req,
+           map_mux::ChangeMap::Request &res); 
 
       bool getApproachPoint(size_t idx, 
           const bwi::Point2f& current_location,
@@ -71,6 +75,8 @@ namespace segbot_logical_translator {
       bool isRobotBesideDoor(
           const bwi::Point2f& current_location,
           float yaw, float threshold, size_t idx);
+      void initialize(
+          );
 
       inline bool getObjectApproachLocation(const std::string& object_name,
           geometry_msgs::Pose& pose) {

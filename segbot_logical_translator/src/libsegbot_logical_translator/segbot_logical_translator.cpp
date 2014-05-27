@@ -48,9 +48,26 @@
 namespace segbot_logical_translator {
 
   SegbotLogicalTranslator::SegbotLogicalTranslator() {
-
     ROS_INFO_STREAM("SegbotLogicalTranslator: Initializing...");
     nh_.reset(new ros::NodeHandle);
+    
+    ROS_INFO_STREAM("SegbotLogicalTranslator: Waiting for make_plan service..");
+    make_plan_client_ = 
+      nh_->serviceClient<nav_msgs::GetPlan>("move_base/make_plan"); 
+    ROS_INFO_STREAM("SegbotLogicalTranslator: make_plan service found!");
+    make_plan_client_.waitForExistence();
+    ros::param::param<std::string>(
+        "~global_frame_id", global_frame_id_, "/map");
+    initialize();
+  }
+  bool SegbotLogicalTranslator::initialize_srv(
+        map_mux::ChangeMap::Request &req,
+        map_mux::ChangeMap::Request &res) {
+      initialize();
+      return true;
+  }
+  void SegbotLogicalTranslator::initialize() {
+    ROS_INFO_STREAM("SegbotLogicalTranslator: RE-Initializing...");
     
     std::string map_file, door_file, location_file;
     std::vector<std::string> required_parameters;
@@ -84,14 +101,8 @@ namespace segbot_logical_translator {
     mapper_->getMap(grid);
     info_ = grid.info;
 
-    ROS_INFO_STREAM("SegbotLogicalTranslator: Waiting for make_plan service..");
-    make_plan_client_ = 
-      nh_->serviceClient<nav_msgs::GetPlan>("move_base/make_plan"); 
-    make_plan_client_.waitForExistence();
-    ROS_INFO_STREAM("SegbotLogicalTranslator: make_plan service found!");
-
-    ros::param::param<std::string>(
-        "~global_frame_id", global_frame_id_, "/map");
+    ROS_INFO("Map_statistics  Height:%d Width:%d" , info_.height, info_.width);
+    ROS_INFO("Map_statistics  LocationsArraySize:%d" , (int)location_map_.size());
   }
 
   bool SegbotLogicalTranslator::isDoorOpen(size_t idx) {
