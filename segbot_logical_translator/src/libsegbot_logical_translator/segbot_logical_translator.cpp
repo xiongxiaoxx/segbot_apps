@@ -68,7 +68,7 @@ namespace segbot_logical_translator {
   }
   void SegbotLogicalTranslator::initialize() {
     ROS_INFO_STREAM("SegbotLogicalTranslator: RE-Initializing...");
-    
+    std::cerr << "SegbotLogicalTranslator : RE-ININTALIZING" << std::endl; 
     std::string map_file, door_file, location_file;
     std::vector<std::string> required_parameters;
     if (!ros::param::get("~map_file", map_file)) {
@@ -79,6 +79,7 @@ namespace segbot_logical_translator {
     }
     if (!ros::param::get("~location_file", location_file)) {
       required_parameters.push_back("~location_file");
+      std::cerr << "changed location file"<< std::endl; 
     }
     if (required_parameters.size() != 0) {
       std::string message = "SegbotLogicalTranslator: Required parameters [" + 
@@ -225,6 +226,7 @@ namespace segbot_logical_translator {
       (doors_[idx].approach_points[0] + doors_[idx].approach_points[1]);
     if (bwi_mapper::getMagnitude(center_pt - current_location) >
         threshold) {
+      std::cerr << "facing is false 1" << std::endl;
       return false;
     }
 
@@ -233,9 +235,11 @@ namespace segbot_logical_translator {
     while (orientation_to_door > yaw + M_PI) orientation_to_door -= 2*M_PI;
     while (orientation_to_door <= yaw - M_PI) orientation_to_door += 2*M_PI;
     if (fabs(orientation_to_door - yaw) > M_PI / 3) {
+      std::cerr << "facing is false 2" << std::endl;
       return false;
     }
 
+    std::cerr << "facing is true 1" << std::endl;
     return true;
   }
 
