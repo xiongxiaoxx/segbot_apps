@@ -139,31 +139,48 @@ namespace segbot_logical_translator {
 
     float min_distance = cv::norm(start_pt - goal_pt);
 
-    if (make_plan_client_.call(srv)) {
-      if (srv.response.plan.poses.size() != 0) {
-        // Valid plan received. Check if plan distance seems reasonable
-        float distance = 0;
-        geometry_msgs::Point old_pt = 
-          srv.response.plan.poses[0].pose.position;
-        for (size_t i = 1; i < srv.response.plan.poses.size(); ++i) {
-          geometry_msgs::Point current_pt = 
-            srv.response.plan.poses[i].pose.position;
-          distance += sqrt(pow(current_pt.x - old_pt.x, 2) + 
-                           pow(current_pt.y - old_pt.y, 2));
-          old_pt = current_pt;
-        }
-        if (distance < 3 * min_distance) {
-          return true;
+    int counter = 0;
+
+    for( int  i = 0; i < 3 ; i++){
+        if (make_plan_client_.call(srv)) {
+          if (srv.response.plan.poses.size() != 0) {
+            // Valid plan received. Check if plan distance seems reasonable
+            float distance = 0;
+            geometry_msgs::Point old_pt = 
+              srv.response.plan.poses[0].pose.position;
+            for (size_t i = 1; i < srv.response.plan.poses.size(); ++i) {
+              geometry_msgs::Point current_pt = 
+                srv.response.plan.poses[i].pose.position;
+              distance += sqrt(pow(current_pt.x - old_pt.x, 2) + 
+                               pow(current_pt.y - old_pt.y, 2));
+              old_pt = current_pt;
+            }
+            if (distance < 3 * min_distance) {
+              //return true;
+              counter++;
+              std::cerr << "counter is now: " << counter << std::endl;
+            } else {
+               //return false; // returned path probably through some other door
+               counter = 0;
+            }
+          } else {
+               //return false; // this is ok. it means the door is closed
+               counter = 0;
+          }
         } else {
-          return false; // returned path probably through some other door
+              //return false; // shouldn't be here. the service has failed
+              counter = 0;
         }
-      } else {
-        return false; // this is ok. it means the door is closed
-      }
-    } else {
-      return false; // shouldn't be here. the service has failed
+    }
+    if (counter == 3){
+        // we have see the door open 3 consequitive times
+        return true;
+    }else{
+        return false;
     }
   }
+
+
 
   bool SegbotLogicalTranslator::getApproachPoint(size_t idx, 
       const bwi_mapper::Point2f& current_location,
