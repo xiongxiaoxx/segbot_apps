@@ -108,8 +108,7 @@ SegbotLogicalNavigator::SegbotLogicalNavigator()
 
   ros::param::param("~door_proximity_distance", door_proximity_distance_, 2.0);
 
-  service_ = nh_->advertiseService("execute_logical_goal",
-      &SegbotLogicalNavigator::execute, this);
+
   service_floor_switch_ = nh_->advertiseService("floor_switch",
       &SegbotLogicalNavigator::initialize_srv, this);
 
@@ -222,6 +221,11 @@ void SegbotLogicalNavigator::odometryHandler(
   //ROS_INFO("OdometryHandler X:%f Y:%f" , robot_x_, robot_y_);
   
   robot_yaw_ = tf::getYaw(pose_out.pose.orientation);
+  
+  if(service_ == ros::ServiceServer()) {
+    service_ = nh_->advertiseService("execute_logical_goal",
+      &SegbotLogicalNavigator::execute, this);
+  }
 }
 
 bool SegbotLogicalNavigator::approachDoor(const std::string& door_name, 
