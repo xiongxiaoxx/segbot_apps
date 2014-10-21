@@ -19,7 +19,7 @@ class QuestionDialogPlugin(Plugin):
 
         # Create QWidget
         self._widget = QWidget()
-        self._widget.setFont(QFont("Times", 14, QFont.Bold))
+        self._widget.setFont(QFont("Times", 40, QFont.Bold))
         self._layout = QVBoxLayout(self._widget)
         self._text_browser = QTextBrowser(self._widget)
         self._layout.addWidget(self._text_browser)
