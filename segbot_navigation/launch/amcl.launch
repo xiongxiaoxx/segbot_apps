@@ -32,12 +32,12 @@
     <param name="odom_model_type" value="diff"/>
     <param name="odom_alpha5" value="0.1"/>
    
-    <param name="odom_alpha1" value="0.3"/>
-    <param name="odom_alpha2" value="0.3"/>
+    <param name="odom_alpha1" value="0.4"/>
+    <param name="odom_alpha2" value="0.4"/>
    
     <!-- translation std dev, m -->
-    <param name="odom_alpha3" value="0.3"/>
-    <param name="odom_alpha4" value="0.3"/>
+    <param name="odom_alpha3" value="0.4"/>
+    <param name="odom_alpha4" value="0.4"/>
     
    
    
@@ -61,7 +61,7 @@
     
     <!-- Increase tolerance because the computer can get quite busy -->
     <param name="transform_tolerance" value="1.0"/>
-    <param name="recovery_alpha_slow" value="0.005"/>
+    <param name="recovery_alpha_slow" value="0.000"/>
     <param name="recovery_alpha_fast" value="0.0"/>
     <remap from="scan" to="$(arg scan_topic)"/>   
 
