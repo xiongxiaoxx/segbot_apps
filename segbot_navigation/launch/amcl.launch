@@ -18,7 +18,7 @@
 
 
   <!-- run a separate map_server to provide amcl a map for localization -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file_localization)">
+  <node name="map_server_localization" pkg="map_server" type="map_server" args="$(arg map_file_localization)">
 
     <remap from="map" to="map_localization" />
 
