@@ -46,7 +46,7 @@
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 
-#include <segbot_logical_translator/LogicalNavigatorAction.h>
+#include <segbot_logical_translator/LogicalNavigationAction.h>
 #include <segbot_logical_translator/segbot_logical_translator.h>
 
 using bwi_planning_common::PlannerAtom;
@@ -56,10 +56,10 @@ class SegbotLogicalNavigator : public segbot_logical_translator::SegbotLogicalTr
 
   public:
 
-    typedef actionlib::SimpleActionServer<segbot_logical_translator::LogicalNavigatorAction> LogicalNavActionServer;
+    typedef actionlib::SimpleActionServer<segbot_logical_translator::LogicalNavigationAction> LogicalNavActionServer;
 
     SegbotLogicalNavigator();
-    void execute(const segbot_logical_translator::LogicalNavigatorGoalConstPtr &goal);
+    void execute(const segbot_logical_translator::LogicalNavigationGoalConstPtr &goal);
     bool initialize_srv(
            map_mux::ChangeMap::Request &goal,
            map_mux::ChangeMap::Request &res); 
@@ -209,8 +209,7 @@ bool SegbotLogicalNavigator::executeNavigationGoal(
       robot_controller_->cancelGoal();
       break;
     }
-    bool finished_before_timeout = robot_controller_->waitForResult(ros::Duration(0.5));
-    navigation_request_complete = !finished_before_timeout;
+    navigation_request_complete = robot_controller_->waitForResult(ros::Duration(0.5));
   }
 
   if (navigation_request_complete) {
@@ -337,9 +336,9 @@ bool SegbotLogicalNavigator::senseDoor(const std::string& door_name,
   return true;
 }
 
-void SegbotLogicalNavigator::execute(const segbot_logical_translator::LogicalNavigatorGoalConstPtr& goal) {
+void SegbotLogicalNavigator::execute(const segbot_logical_translator::LogicalNavigationGoalConstPtr& goal) {
 
-  segbot_logical_translator::LogicalNavigatorResult res;
+  segbot_logical_translator::LogicalNavigationResult res;
   res.observations.clear();
 
   if (goal->command.name == "approach") {

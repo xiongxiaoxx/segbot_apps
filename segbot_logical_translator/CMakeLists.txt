@@ -16,7 +16,7 @@ find_package(catkin REQUIRED
 
 add_action_files(
   DIRECTORY action
-  FILES LogicalNavigator.action
+  FILES LogicalNavigation.action
 )
 
 generate_messages(
